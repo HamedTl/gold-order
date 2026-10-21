@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Gold Order — Next.js Frontend
 
-## Getting Started
+Persian RTL demo interface for the Laravel gold-trading test project.
 
-First, run the development server:
+## Features
+
+- View each demo user's rial and gold balance.
+- Switch between seeded demo user IDs `1` and `2` (on a fresh database).
+- Buy or sell gold with client-side validation and a precision-safe order preview.
+- See Laravel API validation errors, request state, and successful order details.
+- Update balances after successful orders; manual refresh and retry are available.
+
+## Run the complete project (recommended)
+
+From the **repository root**:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Docker, Compose, MySQL, Laravel and Next.js
+# API requests are proxied by Next.js to Docker's nginx service.
+docker compose up --build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit http://localhost:3000. The API is separately accessible at http://localhost:8000.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Local frontend development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+With Laravel API already running at http://localhost:8000:
 
-## Learn More
+```bash
+cd next-app
+npm ci
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+The frontend uses same-origin requests (`/api/wallet` and `/api/orders`), which are proxied through the `rewrites()` in `next.config.mjs`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Local default: `http://localhost:8000`
+- Docker build: `API_INTERNAL_URL=http://api` (already set in `docker/frontend/Dockerfile`)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+No frontend `.env` file or additional packages are required. To run the included financial calculation tests, use `npm test` (Node.js 22+). Test user IDs are set in `src/components/gold-trading-dashboard.jsx`; if the seeded user IDs differ in an existing database, update them there.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Important:** This is an evaluation/demo app. `X-User-Id` is not real authentication. Price is provided by the user as required by the assignment; no live pricing or real payments are implemented.
