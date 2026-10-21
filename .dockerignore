@@ -1,0 +1,12 @@
+.git
+**/.git
+
+**/.env
+**/.env.*
+!**/.env.example
+
+**/node_modules
+**/vendor
+**/.next
+
+**/storage/logs
